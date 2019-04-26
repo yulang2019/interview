@@ -1,6 +1,6 @@
 # 你可能不知道的 CSS3 Animation
 
-> 过段时间要帮女孩做一些计算机视觉的东西，所以研究下动画这一块。前端创建动画的方式有三种，分别是 **定时器**, **requestAnimationFrame** 以及 **CSS3 Animation**，而 requestAnimationFrame 的出现基本秒杀了定时器。虽然 Animation 暂无法处理如三次方缓动、指数衰减正弦曲线缓动等需要高级数学运算的动画（貌似 CSS3 要支持三角函数了），但在绝大多数情况下依旧可以做出非常优秀的动画效果，这里对 Animation 各属性做个总结。
+> 过段时间要帮女孩做一些计算机视觉的东西，所以研究下动画这一块。前端创建动画有三种，分别是 **定时器**, **requestAnimationFrame** 以及 **CSS3 Animation**，而 requestAnimationFrame 的出现基本秒杀了定时器。虽然 Animation 暂无法处理如三次方缓动、指数衰减正弦曲线缓动等需要高级数学运算的动画（貌似 CSS3 要支持三角函数了），但在绝大多数情况下依旧可以做出非常优秀的动画效果，这里对 Animation 各属性做个总结。
 
 ## 属性一览
 
