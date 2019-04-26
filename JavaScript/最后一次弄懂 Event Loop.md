@@ -1,5 +1,3 @@
-# 最后一次弄懂 Event Loop
-
 > Event Loop 是 JavaScript 异步编程的核心思想，也是前端进阶必须跨越的一关。同时，它又是面试的必考点，特别是在 Promise 出现之后，各种各样的面试题层出不穷，花样百出。这篇文章从现实生活中的例子入手，让你彻底理解 Event Loop 的原理和机制，并能游刃有余的解决此类面试题。
 
 ## 宇宙条那道烂大街的笔试题镇楼
@@ -286,6 +284,8 @@ console.log('script end'); // 5
 - 因为微任务优先级高于宏任务，所以先依次打印出 `async1 end` 和 `promise2`
 
 - 最后打印出宏任务 `settimeout`
+
+> 关于这道题的争议：文章发表了大概有两天的时间，陆陆续续收到了小伙伴的评论。大多都是 `async1 end` 和 `promise2` 的顺序问题。我在 `Chrome 73.0.3683.103 for MAC` 和 `Node.js v8.15.1` 测试是 `async1 end` 先于 `promise2`，在 `FireFox 66.0.3 for MAC` 测试是 `async1 end` 后于 `promise2`。
 
 ## Node.js 与 浏览器环境下事件循环的区别
 
