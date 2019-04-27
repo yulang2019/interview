@@ -1,5 +1,3 @@
-# Articles for interview
-
 ## 说明
 
 这个 repo 是我准备面试时写的一系列文章，整个工程会涉及 HTML / CSS / JavaScript / HTTP / 前端框架 / 工程化 等方面，持续更新中，欢迎 Star。
