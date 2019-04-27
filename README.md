@@ -1,3 +1,8 @@
+# Articles for preparing interview
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](https://github.com/YanceyOfficial/interview/pulls)
+
 ## 说明
 
 这个 repo 是我准备面试时写的一系列文章，整个工程会涉及 HTML / CSS / JavaScript / HTTP / 前端框架 / 工程化 等方面，持续更新中，欢迎 Star。文章在我的个人网站 [Yancey Official Blog](https://yanceyleo.com) 和掘金 [@YanceyOfficial](https://juejin.im/user/5bc82522f265da0af1617021) 同步推送，同时欢迎关注我的微信公众号：「进击的前端」。
