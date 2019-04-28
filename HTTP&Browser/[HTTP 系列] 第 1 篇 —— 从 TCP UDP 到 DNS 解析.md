@@ -1,6 +1,8 @@
 # [HTTP 系列] 第 1 篇 —— 从 TCP/UDP 到 DNS 解析
 
-> 这里是《写给前端工程师的 HTTP 系列》，记得有位大佬说：“大厂面试前端对 HTTP 的要求比 CSS 还要高”，这大抵是我写这个系列的初衷吧，你懂的。文章写作计划大致如下（后期根据情况可能会有一定删减与合并），本篇是该系列的第 1 篇 —— 《从 TCP/UDP 到 DNS 解析》。
+> 这里是《写给前端工程师的 HTTP 系列》，记得有位大佬曾经说过：“大厂前端面试对 HTTP 的要求比 CSS 还要高”，由此可见 HTTP 的重要程度不可小视。文章写作计划如下，视情况可能有一定的删减，本篇是该系列的第 1 篇 —— 《从 TCP/UDP 到 DNS 解析》。
+
+更多文章可关注我的 [interview 系列](https://github.com/YanceyOfficial/interview)。
 
 ## 写作计划
 
@@ -34,7 +36,7 @@
 
 `HTTP/1.1` 标准于 1999 年 6 月被公布，截止到目前它应该是最主流的 HTTP 协议版本，它被记载于 [RFC2616 - Hypertext Transfer Protocol -- HTTP/1.1](http://www.ietf.org/rfc/rfc2616.txt)
 
-`HTTP/2` 标准于 2015 年 5 月被正式发布，它被记载于 [RFC7540 - Hypertext Transfer Protocol -- HTTP/2](http://www.ietf.org/rfc/rfc7540.txt)，它的特点是 ① 采用二进制而非明文来打包，② 多路复用，③ 修复队头堵塞，④ 允许设置设定请求优先级，⑤ 服务器推送，⑥ WebSocket 等等，后面的章节会一一解释。
+`HTTP/2` 标准于 2015 年 5 月被正式发布，它被记载于 [RFC7540 - Hypertext Transfer Protocol -- HTTP/2](http://www.ietf.org/rfc/rfc7540.txt)，它的特点是 ① 采用二进制而非明文来打包，② 多路复用，③ 修复队头堵塞，④ 允许设置设定请求优先级，⑤ 服务器推送，⑥ WebSocket 等等。
 
 据 [w3techs](https://w3techs.com/technologies/details/ce-http2/all/all) 统计，截止到 2019/04/22，HTTP/2 的全球占有率为 36%。我的 [个人博客](https://yanceyleo.com) 在上线之初就支持了 HTTP/2。
 
@@ -70,7 +72,7 @@
 
 ## 什么是 MAC 地址？
 
-MAC 地址 (Media Access Control Address)，直译为媒体访问控制地址，也称为局域网地址
+媒体访问控制地址 (Media Access Control Address)，也称为局域网地址
 (LAN Address)，以太网地址 (Ethernet Address) 或物理地址 (Physical Address)，它是一个用来确认网上设备位置的地址。ARP (Address Resolution Protocol) 是一种用来解析地址的协议，它可以根据 IP 地址反查出对应的 MAC 地址。
 
 下图展示了一台电脑内网 IP 和 MAC 地址。在终端 (MAC OS 环境) 输入 `ifconfig`，找到 `en0`，便可查找本地以太网的信息。
@@ -137,8 +139,6 @@ TCP (Transmission Control Protocol, 传输控制协议) 是一种面向连接的
 
 ![TCP 报文](https://yancey-assets.oss-cn-beijing.aliyuncs.com/20170227111849763-0000.jpg)
 
-上图是 TCP 报文的组成结构，有没有种被大学《计算机网络》支配的恐惧？不过还得一个一个来看。
-
 **端口号**：包括源端口号和目的端口号，用来标识同一台计算机的不同的应用进程。TCP 报头中的源端口号和目的端口号同 IP 数据报中的源 IP 与目的 IP 唯一确定一条 TCP 连接。
 
 - **源端口号**：源端口和 IP 地址的作用是标识报文的返回地址。
@@ -164,7 +164,7 @@ TCP (Transmission Control Protocol, 传输控制协议) 是一种面向连接的
 | SYN (synchronize)     | 同步序号，用于建立连接过程，在连接请求中，SYN=1 和 ACK=0 表示该数据段没有使用捎带的确认域，而连接应答捎带一个确认，即 SYN=1 和 ACK=1。 |
 | FIN (Finish)          | finish 标志，用于释放连接，为 1 时表示发送方已经没有数据发送了，即关闭本方数据流。                                                     |
 
-**窗口**：滑动窗口大小，用来告知发送端接受端的缓存大小，以此控制发送端发送数据的速率，从而达到流量控制。窗口大小是一个 16bit 字段，因而窗口大小最大为 65535。
+**窗口**：滑动窗口大小，用来告知发送端接受端的缓存大小，以此控制发送端发送数据的速率，从而达到流量控制。窗口大小是一个 16bit 字段，因此窗口大小最大为 65535。
 
 **校验和**：奇偶校验，此校验和是对整个的 TCP 报文段，包括 TCP 头部和 TCP 数据，以 16 位字进行计算所得。由发送端计算和存储，并由接收端进行验证。
 
@@ -180,7 +180,7 @@ TCP (Transmission Control Protocol, 传输控制协议) 是一种面向连接的
 - 可以。
 - 那我连了。
 
-emmmmm，单身久了，看三次握手都那么眉清目秀。上帝请赐给我一个女孩吧，我会好好爱她的！
+emmmmm，单身久了，看三次握手都那么眉清目秀。
 
 ![上帝请赐给我一个女孩吧，我会好好爱她的！](https://yancey-assets.oss-cn-beijing.aliyuncs.com/images.jpeg)
 
@@ -208,6 +208,8 @@ emmmmm，单身久了，看三次握手都那么眉清目秀。上帝请赐给�
 - 客户端：晚安，好梦
 
 TAT，好虐。
+
+![上帝请赐给我一个女孩吧，我会好好爱她的！](https://yancey-assets.oss-cn-beijing.aliyuncs.com/images.jpeg)
 
 - 第一次挥手
 
@@ -247,8 +249,6 @@ TAT，好虐。
 | 适用场景     | 适用于实时应用 (IP 电话、视频会议、直播等) | 适用于要求可靠传输的应用，例如文件传输 |
 
 ## DNS
-
-DNS (Domain Name System) 是位于应用层的协议。
 
 ### DNS 报文格式
 
@@ -392,6 +392,14 @@ TCP 还设有一个保活计时器 (keep-alive)，如果客户端出现故障，
 ### DNS 解析流程 (重点)
 
 见上文。
+
+## 最后
+
+下一篇将对 HTTP 协议进行全面剖析，敬请期待。
+
+欢迎关注我的微信公众号：进击的前端
+
+![进击的前端](https://yancey-assets.oss-cn-beijing.aliyuncs.com/qrcode_for_gh_541158abcb21_344.jpg)
 
 ## 参考
 
