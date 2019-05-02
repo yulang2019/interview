@@ -16,7 +16,7 @@
 
 - JWT (我自己博客的后台用到了，所以专门要写一篇文章)
 
-- SPDY / HTTP/2 / Websockets
+- SPDY / HTTP/2 / Websocket
 
 - 网络攻击
 

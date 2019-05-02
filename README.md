@@ -37,7 +37,7 @@
 
   - [深入理解并手写遵循 Promise A+ 规范的 Promise](https://github.com/YanceyOfficial/interview/blob/master/JavaScript/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%B9%B6%E6%89%8B%E5%86%99%E9%81%B5%E5%BE%AA%20Promise%20A%2B%20%E8%A7%84%E8%8C%83%E7%9A%84%20Promise.md)
   
-  - [你可能不知道的 Object.defineProperty().md](https://github.com/YanceyOfficial/interview/blob/master/JavaScript/%E4%BD%A0%E5%8F%AF%E8%83%BD%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84%20Object.defineProperty().md)
+  - [你可能不知道的 Object.defineProperty()](https://github.com/YanceyOfficial/interview/blob/master/JavaScript/%E4%BD%A0%E5%8F%AF%E8%83%BD%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84%20Object.defineProperty().md)
 
 - HTTP&Browser
 
