@@ -403,7 +403,7 @@ TCP 还设有一个保活计时器 (keep-alive)，如果客户端出现故障，
 
 ## 参考
 
-《图解 HTTP》 -- 上野宣
+《图解 HTTP》 -- 上野 宣
 
 [TCP 和 UDP](https://juejin.im/post/583d2d6a67f356006bb7d535)
 
