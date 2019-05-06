@@ -6,19 +6,15 @@
 
 ## 写作计划
 
-- [从 TCP/UDP 到 DNS 解析](https://juejin.im/post/5cc5421e5188252e761e7e12)
+- [从 TCP/UDP 到 DNS 解析](https://github.com/YanceyOfficial/interview/blob/master/HTTP%26Browser/%5BHTTP%20%E7%B3%BB%E5%88%97%5D%20%E7%AC%AC%201%20%E7%AF%87%20%E2%80%94%E2%80%94%20%E4%BB%8E%20TCP%20UDP%20%E5%88%B0%20DNS%20%E8%A7%A3%E6%9E%90.md)
 
-- HTTP 协议那些事
+- [HTTP 协议那些事](https://github.com/YanceyOfficial/interview/blob/master/HTTP%26Browser/%5BHTTP%20%E7%B3%BB%E5%88%97%5D%20%E7%AC%AC%202%20%E7%AF%87%20%E2%80%94%E2%80%94%20HTTP%20%E5%8D%8F%E8%AE%AE%E9%82%A3%E4%BA%9B%E4%BA%8B.md)
 
-- Web 服务器 (nginx/caddy)
+- HTTPS / SPDY / HTTP/2 / Websocket
 
-- HTTPS (对称加密/非对称加密/SSL)
+- JWT
 
-- JWT (我自己博客的后台用到了，所以专门要写一篇文章)
-
-- SPDY / HTTP/2 / Websocket
-
-- 网络攻击
+- 网络安全
 
 - 跨域
 
@@ -30,9 +26,9 @@
 
 ## HTTP 协议
 
-超文本传输协议（HyperText Transfer Protocol）是基于 TCP/IP 协议，用于分布式、协作式和超媒体信息系统的应用层协议。HTTP 是万维网的数据通信的基础，它是 `无状态` 协议，默认端口为 80。HTTP 在 TCP 的基础上，规定了 Request-Response 的模式，这个模式决定了通讯必定由浏览器首先发起。
+超文本传输协议（HyperText Transfer Protocol）是基于 TCP/IP 协议，用于分布式、协作式和超媒体信息系统的应用层协议。HTTP 是万维网的数据通信的基础，它是 `无状态` 的协议，默认端口为 80。HTTP 在 TCP 的基础上，规定了 Request-Response 的模式，这个模式决定了通讯必定由浏览器首先发起。
 
-抛去一些复杂的层面，浏览器开发者只需要一个 TCP 库就可以搞定浏览器的网络通讯部分。我们可以用 `telnet` 来做个实验。在 MAC 端直接使用 `brew install telnet` 即可。
+抛去一些复杂的层面，浏览器开发者只需要一个 TCP 库就可以搞定浏览器的网络通讯部分。我们可以用 `telnet` 来做个实验。
 
 首先连接到 `yanceyleo.com` 的主机。
 
@@ -65,11 +61,13 @@ HTTP 是无状态 (stateless) 协议，它不会对请求和响应之间通信�
 
 ### cookie 原理
 
-何为 cookie 呢？我们在上面的文章中了解到 HTTP 是无状态的，但随着 Web 的不断发展，这种 **无状态** 的特性出现了弊端。当你登录到一家购物网站，在跳转到该站的其他页面时也应该继续保持登录状态，但是因为 HTTP 是无状态的，所以必须得在浏览器端存储一些信息来标识当前用户，因此 cookie 应运而生，它一种浏览器管理状态的文件。
+何为 cookie 呢？我们在上面了解到 HTTP 是无状态的，但随着 Web 的不断发展，这种 **无状态** 的特性出现了弊端。当你登录到一家购物网站，在跳转到该站的其他页面时也应该继续保持登录状态。但是因为 HTTP 是无状态的，所以必须得在浏览器端存储一些信息来标识当前用户，因此 cookie 应运而生，它一种浏览器管理状态的文件。
 
 ![cookie 原理](https://yancey-assets.oss-cn-beijing.aliyuncs.com/07ecb36c4820a66de90013f303cac8c0.jpg)
 
 浏览器第一次发出请求，服务器会将 cookie 放入到响应请求中，在浏览器第二次发请求的时候，会把 cookie 带过去，于是服务端就会辨别用户身份。注意：单个 cookie 保存的数据不能超过 4K，很多浏览器都限制一个站点最多保存 20 个 cookie。
+
+cookie 在请求头中有一个 `cookie` 字段，在响应头里有一个 `set-cookie` 字段。
 
 ### cookie 是不可跨域的
 
@@ -77,6 +75,7 @@ cookie 本身就是用来保存一些隐私性的字段，基于安全性的考�
 
 ```js
 document.cookie = 'hello=world;path=/;domain=.baidu.com';
+
 document.cookie = 'world=hello;path=/;domain=.google.com';
 ```
 
@@ -86,11 +85,9 @@ document.cookie = 'world=hello;path=/;domain=.google.com';
 
 ### cookie 的属性
 
-我们通过一个登录的小例子来了解服务端设置 cookie。首先通过 `express --no-view mocker` 生成一个 express 的工程。关于 [express](https://expressjs.com/) 及其脚手架 [express application generator](https://expressjs.com/en/starter/generator.html) 这里不去多说。
+我们通过一个登录的小例子来了解服务端设置 cookie。首先通过 express application generator 生成一个 Express 工程。**本示例的源码请访问 [express-cookies](https://github.com/YanceyOfficial/express-cookies)。**
 
-\* 该 demo 的源码请访问 [express-cookies](https://github.com/YanceyOfficial/express-cookies)。
-
-首先在 index.html 文件中输入以下代码，我们创建一个输入用户名和密码的界面，在点击按钮的时候，通过 fetch 将输入的值发送给后端。
+接着在 index.html 文件中输入以下代码，我们创建一个输入用户名和密码的界面，在点击按钮的时候，通过 fetch 将输入的值发送给后端。
 
 ```html
 <fieldset>
@@ -115,7 +112,6 @@ document.cookie = 'world=hello;path=/;domain=.google.com';
 
     fetch('/login', {
       method: 'POST',
-      // fetch 一定要手动设置 headers !!!
       headers: new Headers({
         'Content-Type': 'application/json'
       }),
@@ -168,7 +164,7 @@ res.cookie('domain', 'domian', { domain: 'yanceyleo.com' });
 
 #### expires / maxAge
 
-这两个属性都是设置 cookie 的 `过期时间`，不同的是，`expires` 接收一个 Date 格式的时间，而 `maxAge` 接收一个 `毫秒时间戳`。因为后者更加直观和简便，所以建议使用`maxAge`。
+这两个属性都是设置 cookie 的 `过期时间`。不同的是，`expires` 接收一个 Date 格式的时间，而 `maxAge` 接收一个 `毫秒时间戳`。因为后者更加直观和简便，所以建议使用 `maxAge`。
 
 两个属性都可以传递一个 `负值` 或者 `0`，如果浏览器已存在同名 cookie，则会清除此 cookie，否则该条 cookie 不会被创建。
 
@@ -280,7 +276,7 @@ session 是服务端使用的一种记录客户端状态的机制，与 cookie �
 
 因此，cookie 机制就是通过检查客户身上的 “通行证” 来确定客户身份，而 session 则是通过检查服务器上的 “客户明细表” 来确认客户身份。session 相当于程序在服务器上建立的一份客户档案，客户来访的时候只需要查询客户档案表就可以了。
 
-因为 HTTP 是无状态的，所以单纯的 session 仍不能判断是否为到底是哪个用户。因此服务端仍要向客户端发送一个 `maxAge 为 -1` 的 cookie 来作为不同用户的唯一标识。
+因为 HTTP 是无状态的，所以单纯的 session 仍不能判断是否为到底是哪个用户。因此服务端仍要向客户端发送一个 maxAge 为 `-1` 的 cookie 来作为不同用户的唯一标识。
 
 当然你也可以不使用 cookie，你可以通过重写 URL 地址的方式来实现。它的原理是将用户的 seesion id 写入到 URL 中，当浏览器解析新的 URL 时就可以定位到是哪位用户。
 
@@ -360,7 +356,68 @@ HTTP 协议中有一种被称为 `内容编码` 的功能，可以有效的压�
 
 - **实体首部字段 (Entity Header Field)** 针对请求报文和响应报文的实体部分使用的首部。补充了资源内容更新时间等与实体有关的信息。
 
+### End-to-end 首部 和 Hop-by-hop 首部
+
+HTTP 首部字段将定义成缓存代理和非缓存代理的行为，分成 `端到端首部` 和 `逐条首部`。
+
+分到 `端到端首部` 的首部会转发给请求/响应对应的最终接收目标，且必须保存在由缓存生成的响应中，并且它必须被转发。
+
+分到 `逐跳首部` 的首部只对单次转发有效，会因通过缓存或代理而不再转发。在 HTTP/1.1 之后的版本，如果使用逐跳首部，则需要提供 Connection 首部字段。其中 Connection、Keep-Alive、Proxy-Authenticate、、Proxy-Authorization、Trailer、TE、Transfer-Encoding、Upgrade 这 8 个为逐跳首部，其余都为端到端首部。
+
 ### 通用首部字段
+
+#### Cache-Control
+
+该字段用于控制缓存的工作机制，它接受多个参数，中间用逗号隔开。
+
+| 指令             | 参数                 | 类型                | 说明                                                                                                      |
+| ---------------- | -------------------- | ------------------- | --------------------------------------------------------------------------------------------------------- |
+| no-cache         | 无                   | 请求/响应都有该字段 | 若请求中包含该字段，则表示客户端不接受缓存；若服务端包含该字段，缓存前必须先确认其有效性                  |
+| no-store         | 无                   | 请求/响应都有该字段 | 不缓存请求或相应的任何内容。no-cache 响应实际上是可以存储到本地缓存区中的，而 no-store 才是本地彻底不缓存 |
+| max-age          | 单位为秒，必需       | 请求/响应都有该字段 | 当缓存时间小于该值时，客户端接受缓存的资源，否则请求源服务器，该指令的优先级高于 Expires                  |
+| max-state        | 单位为秒，可省略参数 | 只有请求拥有该字段  | 只要有该字段，客户端就可以接受过期的缓存                                                                  |
+| min-fresh        | 单位为秒，必需       | 只有请求拥有该字段  | 该指令要求缓存服务器返回至少还未过指定时间的缓存资源                                                      |
+| no-transform     | 无                   | 请求/响应都有该字段 | 无论在请求还是响应中，都不允许缓存改变实体主体的媒体类型                                                  |
+| only-if-cached   | 无                   | 只有请求拥有该字段  | 表示客户端仅在缓存服务器本地缓存目标资源的情况下才会要求去返回                                            |
+| cache-extension  | -                    | 请求/响应都有该字段 | 新指令扩展                                                                                                |
+| public           | 无                   | 只有响应拥有该字段  | 可向任意客户端提供相应的缓存                                                                              |
+| private          | 可省略               | 只有响应拥有该字段  | 仅向特定用户返回响应                                                                                      |
+| must-revalidate  | 无                   | 只有响应拥有该字段  | 可缓存，但必须再向源服务器进行一次验证                                                                    |
+| proxy-revalidate | 无                   | 只有响应拥有该字段  | 要求中间缓存服务器对缓存的响应有效性再进行确认                                                            |
+| s-maxage         | 单位为秒，必需       | 只有响应拥有该字段  | 与 max-age 相比，该指令仅适用于公共服务器                                                                 |
+
+#### Connection
+
+Connection 用于控制不再转发给代理的首部字段，还可以管理持久连接。HTTP/1.1 默认是持久连接，当服务端明确表示断开连接时，则将 Connection 设为 `Close`。
+
+#### Date
+
+Date 表示创建报文的日期和时间，它的格式如下。
+
+```http
+date: Sun, 05 May 2019 02:05:37 GMT
+```
+
+#### Trailer
+
+该字段会事先说明在报文主体后记录了哪些首部字段，可应用于 HTTP/1.1 分块传输编码。
+
+#### Transfer-Encoding
+
+该字段规定了传输报文主体时采用的编码方式，HTTP/1.1 的传输编码方式仅对分块传输编码有效。
+
+#### Upgrade
+
+该字段用于检测 HTTP 协议或者其他协议是否可以使用更高的版本通信，该字段要和 Connection 字段一起使用。下面的例子是询问是否可以使用 TLS/1.0 协议。对于附有 Upgrade 字段的请求，服务端可返回 101 的状态码。
+
+```http
+connection: upgrade
+upgrade: TLS/1.0
+```
+
+#### Via
+
+该字段用于追踪客户端与服务器之间请求和响应报文的传输路径。
 
 ### 请求首部字段
 
@@ -443,7 +500,7 @@ If-Match: W/"pqxe5g29m4"
 If-Modified-Since: Fri, 01 May 2019 11:20:04 GMT
 
 // 响应首部字段
-last-modified: Fri, 03 May 2019 11:20:04 GMT
+Last-Modified: Fri, 03 May 2019 11:20:04 GMT
 ```
 
 #### If-Unmodified-Since
@@ -608,19 +665,49 @@ Content-Length: 4871261
 
 #### Content-MD5
 
-该字段用于检查报文主体在传输过程中是否保持完整性，以及确认传输到达。服务端对报文主体执行 MD5 算法，获取一个 128 位的二进制数，再通过 base64 编码后将结果写入 Content-MD5 字段值。因为 HTTP 首部无法记录二进制值，因此需要通过 Base64 进行处理。
+该字段用于检查报文主体在传输过程中是否保持完整性，以及确认传输到达。服务端对报文主体执行 MD5 算法，获取一个 128 位的二进制数，再通过 base64 编码后将结果写入 Content-MD5 字段值。因为 HTTP 首部无法记录二进制值，因此需要通过 Base64 进行处理。客户端在接收到响应后再对报文主体执行一次相同的 MD5 算法。将计算值于该字段值比较，即可判断出报文主体的准确性。
+
+```http
+Content-MD5: +PFVsTxtpDcj7t4+27tNKA==
+```
+
+#### Content-Range
+
+该字段告知客户端作为响应返回的实体的哪个部分符合范围请求，字段值以字节为单位。
+
+#### Content-Type
+
+非常常见的字段，用来说明实体主体内对象的媒体类型。
+
+```http
+content-type: application/json; charset=utf-8
+```
+
+#### Expires
+
+该字段将资源失败的日期告诉客户端，在 Expires 指定的时间之前，响应的副本会一直被保存。当超过指定的时间后，缓存服务器在请求发送过来时，转向源服务器请求资源。当首部字段 Cache-Control 有指定的 max-age 时，会优先处理 max-age。
+
+关于缓存机制下一章会详细去讲。
+
+#### Last-Modified
+
+该字段指明资源的最终修改时间，一般来讲，该值就是 Request-URI 指定资源的被修改的时间。
 
 ## HTTP 方法
 
-| 方法名  | 描述                                         |
-| ------- | -------------------------------------------- |
-| GET     | 告知服务器，需要从服务器向客户端发送命名资源 |
-| HEAD    | 仅发送命名资源响应中的 HTTP 首部             |
-| PUT     | 将客户端的数据存储的命名的服务器资源中       |
-| POST    | 将客户端数据发送到一个服务器应用程序         |
-| TRACE   | 追溯一个请求                                 |
-| OPTIONS | 查看服务器对资源支持的操作                   |
-| DELETE  | 从服务器删除资源                             |
+| 方法名  | 描述                                                                                                                                                                                                                                                                                                                                           |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET     | GET 请求会显示请求指定的资源。一般来说 GET 方法应该只用于数据的读取，而不应当用于会产生副作用的非幂等的操作中。它期望的应该是而且应该是安全的和幂等的。这里的安全指的是，请求不会影响到资源的状态。                                                                                                                                            |
+| HEAD    | HEAD 方法与 GET 方法一样，都是向服务器发出指定资源的请求。但是，服务器在响应 HEAD 请求时不会回传资源的内容部分，即：响应主体。这样，我们可以不传输全部内容的情况下，就可以获取服务器的响应头信息。HEAD 方法常被用于客户端查看服务器的性能。                                                                                                    |
+| PUT     | PUT 请求会身向指定资源位置上传其最新内容，PUT 方法是幂等的方法。通过该方法客户端可以将指定资源的最新数据传送给服务器取代指定的资源的内容。                                                                                                                                                                                                     |
+| POST    | POST 请求会 向指定资源提交数据，请求服务器进行处理，如：表单数据提交、文件上传等，请求数据会被包含在请求体中。POST 方法是非幂等的方法，因为这个请求可能会创建新的资源或/和修改现有资源。                                                                                                                                                       |
+| TRACE   | TRACE 请求服务器回显其收到的请求信息，该方法主要用于 HTTP 请求的测试或诊断。                                                                                                                                                                                                                                                                   |
+| OPTIONS | OPTIONS 请求与 HEAD 类似，一般也是用于客户端查看服务器的性能。 这个方法会请求服务器返回该资源所支持的所有 HTTP 请求方法，该方法会用'\*'来代替资源名称，向服务器发送 OPTIONS 请求，可以测试服务器功能是否正常。JavaScript 的 XMLHttpRequest 对象进行 CORS 跨域资源共享时，就是使用 OPTIONS 方法发送嗅探请求，以判断是否有对指定资源的访问权限。 |
+| DELETE  | DELETE 请求用于请求服务器删除所请求 URI（统一资源标识符，Uniform Resource Identifier）所标识的资源。DELETE 请求后指定资源会被删除，DELETE 方法也是幂等的。                                                                                                                                                                                     |
+| PATCH   | PATCH 方法出现的较晚，它在 2010 年的 RFC 5789 标准中被定义。PATCH 请求与 PUT 请求类似，同样用于资源的更新。二者有以下两点不同：1.PATCH 一般用于资源的部分更新，而 PUT 一般用于资源的整体更新。2.当资源不存在时，PATCH 会创建一个新的资源，而 PUT 只会对已在资源进行更新。                                                                      |
+| CONNECT | CONNECT 方法是 HTTP/1.1 协议预留的，能够将连接改为管道方式的代理服务器。通常用于 SSL 加密服务器的链接与非加密的 HTTP 代理服务器的通信。                                                                                                                                                                                                        |
+
+GET，HEAD，PUT 和 DELETE 是幂等方法，而 POST 不是幂等的。
 
 ## HTTP 状态码
 
@@ -665,31 +752,31 @@ HTTP 状态码负责表示客户端 HTTP 请求的返回结果、标记服务器
 | 303    | See Other          | 告知客户端使用另一个 URL 来获取资源。其主要目的是，允许 POST 请求的响应将客户端定向的某一个资源上去。                      |
 | 304    | Not Modified       | 若客户端发起一个有条件的 GET 请求，而资源未被修改，可以使用该状态码说明资源未被修改。                                      |
 | 305    | Use Proxy          | 必须通过代理来访问这一资源，代理有 Location 首部给出。需要知道的是，客户端接收到这一状态时，不应该假定所有请求都经过代理。 |
-| 306    | Unused             | 暂未使用。                                                                                                                 |
 | 307    | Temporary Redirect | 和 302 相同。                                                                                                              |
 
 ### 4xx 客户端错误状态码
 
-| 状态码 | 状态码英文名称                                   | 描述                                                                        |
-| ------ | ------------------------------------------------ | --------------------------------------------------------------------------- |
-| 400    | Bad Request                                      | 告知客户端它发送了一个错误的请求。                                          |
-| 401    | Unauthorized                                     | 与适当首部一同返回，告知客户端在请求之前先进行认证。                        |
-| 402    | Payment Required                                 | 保留未使用。                                                                |
-| 403    | Forbidden                                        | 请求被拒绝。                                                                |
-| 404    | Not Found                                        | 服务器无法找到请求的 URL。                                                  |
-| 405    | Method Not Allowed                               | 客户端使用不支持的方法请求 URL。应该在首部使用 Allow 告知客户端正确的方法。 |
-| 406    | Method Not Allowed                               | 客户端使用不支持的方法请求 URL。应该在首部使用 Allow 告知客户端正确的方法。 |
-| 407    | Proxy Authentication Required                    | 代理服务器要求客户端验证。                                                  |
-| 408    | Request Timeout                                  | 客户端完成请求时间过长，服务器可以关闭链接。                                |
-| 409    | Conflict                                         | 服务器认为该请求可能引起冲突。响应主体中应包含冲突的主体的描述。            |
-| 410    | Gone                                             | 与 404 类似，只是服务器曾经拥有此资源，后来被移除。                         |
-| 411    | Length Required                                  | 服务器要求请求报文中包含 Content-Length 首部。                              |
-| 412    | Precondition Failed                              | 客户端发起条件请求，其中有条件失败。                                        |
-| 413    | Request Entity Too LargeRequest Entity Too Large | 客户端发送的主体部分比服务器能够活希望处理的要大。                          |
-| 414    | Request URI Too Long                             | URL 过长。                                                                  |
-| 415    | Unsupported Media Type                           | 服务器无法理解或无法支持客户端发送的内容类型。                              |
-| 416    | Requested Range Not Satisfiable                  | 请求范围无效或无法满足。                                                    |
-| 417    | Expectation Failed                               | 请求首部包含 Expect 期望，但服务器无法满足。                                |
+| 状态码 | 状态码英文名称                                   | 描述                                                                              |
+| ------ | ------------------------------------------------ | --------------------------------------------------------------------------------- |
+| 400    | Bad Request                                      | 告知客户端它发送了一个错误的请求。                                                |
+| 401    | Unauthorized                                     | 与适当首部一同返回，告知客户端在请求之前先进行认证。                              |
+| 403    | Forbidden                                        | 请求被拒绝。                                                                      |
+| 404    | Not Found                                        | 服务器无法找到请求的 URL。                                                        |
+| 405    | Method Not Allowed                               | 客户端使用不支持的方法请求 URL。应该在首部使用 Allow 告知客户端正确的方法。       |
+| 406    | Not Acceptable                                   | 服务器端无法提供与 Accept-Charset 以及 Accept-Language 消息头指定的值相匹配的响应 |
+| 407    | Proxy Authentication Required                    | 代理服务器要求客户端验证。                                                        |
+| 408    | Request Timeout                                  | 客户端完成请求时间过长，服务器可以关闭链接。                                      |
+| 409    | Conflict                                         | 服务器认为该请求可能引起冲突。响应主体中应包含冲突的主体的描述。                  |
+| 410    | Gone                                             | 与 404 类似，只是服务器曾经拥有此资源，后来被移除。                               |
+| 411    | Length Required                                  | 服务器要求请求报文中包含 Content-Length 首部。                                    |
+| 412    | Precondition Failed                              | 客户端发起条件请求，其中有条件失败。                                              |
+| 413    | Request Entity Too LargeRequest Entity Too Large | 客户端发送的主体部分比服务器能够活希望处理的要大。                                |
+| 414    | Request URI Too Long                             | URL 过长。                                                                        |
+| 415    | Unsupported Media Type                           | 服务器无法理解或无法支持客户端发送的内容类型。                                    |
+| 416    | Requested Range Not Satisfiable                  | 请求范围无效或无法满足。                                                          |
+| 417    | Expectation Failed                               | 请求首部包含 Expect 期望，但服务器无法满足。                                      |
+| 429    | Too Many Requests                                | 短时间内发送了太多请求                                                            |
+| 431    | Request Header Fields Too Large                  | 请求头太大                                                                        |
 
 ### 5xx 服务端错误状态码
 
@@ -703,9 +790,9 @@ HTTP 状态码负责表示客户端 HTTP 请求的返回结果、标记服务器
 | 505    | HTTP Version Not Support | 服务器收到的请求使用了它无法支持的协议版本。                                                        |
 |        |
 
-## 最后
+## 总结
 
-下一篇会着重讲解 HTTP 协议的缓存，敬请期待。
+这一篇文章主要探讨了 HTTP 协议以及它的 `无连接、无状态` 性，从而引出了 cookie 和 session。接着介绍了 HTTP 的头部、方法、状态码。下一篇会着重讲解 HTTP 协议的缓存，敬请期待。
 
 欢迎关注我的微信公众号：进击的前端
 

@@ -6,19 +6,15 @@
 
 ## 写作计划
 
-- 从 TCP/UDP 到 DNS 解析
+- [从 TCP/UDP 到 DNS 解析](https://github.com/YanceyOfficial/interview/blob/master/HTTP%26Browser/%5BHTTP%20%E7%B3%BB%E5%88%97%5D%20%E7%AC%AC%201%20%E7%AF%87%20%E2%80%94%E2%80%94%20%E4%BB%8E%20TCP%20UDP%20%E5%88%B0%20DNS%20%E8%A7%A3%E6%9E%90.md)
 
-- HTTP 协议 / HTTP 头部 / 方法 / 状态码
+- [HTTP 协议那些事](https://github.com/YanceyOfficial/interview/blob/master/HTTP%26Browser/%5BHTTP%20%E7%B3%BB%E5%88%97%5D%20%E7%AC%AC%202%20%E7%AF%87%20%E2%80%94%E2%80%94%20HTTP%20%E5%8D%8F%E8%AE%AE%E9%82%A3%E4%BA%9B%E4%BA%8B.md)
 
-- Web 服务器 (nginx/caddy)
+- HTTPS / SPDY / HTTP/2 / Websocket
 
-- HTTPS (对称加密/非对称加密/SSL)
+- JWT
 
-- JWT (我自己博客的后台用到了，所以专门要写一篇文章)
-
-- SPDY / HTTP/2 / Websocket
-
-- 网络攻击
+- 网络安全
 
 - 跨域
 
